@@ -1,23 +1,39 @@
 import javax.swing.*;
-import javax.swing.border.LineBorder;
+import javax.swing.border.*;
 import java.awt.*;
 import java.awt.event.*;
 
+/**
+ * Clase que implementa la interfaz gráfica de una calculadora.
+ */
 public class CalculadoraInterfaz extends JFrame implements ActionListener, KeyListener, WindowListener {
+
+    /** Pantalla para mostrar el resultado actual. */
     private JLabel pantallaResultado;
+
+    /** Pantalla para mostrar el valor almacenado y el modo de entrada */
     private JLabel pantallaAlmacenada;
+
+    /** Constructor dinámico para capturar las entradas del usuario. */
     private StringBuilder entrada;
+
+    /** Modo de entrada actual de la calculadora. */
     private String modoEntrada;
+
+    /** Instancia de la calculadora. */
     private CalculadoraLogica logica;
 
+    /**
+     * Constructor principal que configura la ventana y los componentes de la interfaz.
+     */
     public CalculadoraInterfaz() {
+        // Inicialización de la lógica y variables internas.
         logica = new CalculadoraLogica();
         entrada = new StringBuilder();
         modoEntrada = "Libre";
 
+        // Configuración de la ventana principal.
         setTitle("Calculadora de Natalia Rey Loroño");
-
-        // Configuración de ventana
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         int frameWidth = screenSize.width / 2;
         int frameHeight = 600;
@@ -26,7 +42,7 @@ public class CalculadoraInterfaz extends JFrame implements ActionListener, KeyLi
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
-        // Pantalla de resultado
+        // Configuración de la pantalla de resultado.
         pantallaResultado = new JLabel("0", SwingConstants.RIGHT);
         pantallaResultado.setFont(new Font("Arial", Font.PLAIN, 48));
         pantallaResultado.setOpaque(true);
@@ -35,7 +51,7 @@ public class CalculadoraInterfaz extends JFrame implements ActionListener, KeyLi
         pantallaResultado.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         add(pantallaResultado, BorderLayout.NORTH);
 
-        // Pantalla de valor almacenado
+        // Configuración de la pantalla de valor almacenado.
         pantallaAlmacenada = new JLabel("Valor Almacenado: 0", SwingConstants.RIGHT);
         pantallaAlmacenada.setFont(new Font("Arial", Font.PLAIN, 16));
         pantallaAlmacenada.setOpaque(true);
@@ -44,7 +60,7 @@ public class CalculadoraInterfaz extends JFrame implements ActionListener, KeyLi
         pantallaAlmacenada.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         add(pantallaAlmacenada, BorderLayout.CENTER);
 
-        // Panel de botones
+        // Configuración de paneles de botones.
         JPanel panelNumeros = crearPanelNumeros();
         JPanel panelOperaciones = crearPanelOperaciones();
 
@@ -53,12 +69,18 @@ public class CalculadoraInterfaz extends JFrame implements ActionListener, KeyLi
         panelInferior.add(panelOperaciones, BorderLayout.EAST);
         add(panelInferior, BorderLayout.SOUTH);
 
+        // Configuración de eventos.
         addWindowListener(this);
         addKeyListener(this);
         setFocusable(true);
         setFocusTraversalKeysEnabled(false);
     }
 
+    /**
+     * Crea el panel que contiene los botones numéricos de la calculadora.
+     * 
+     * @return JPanel con el diseño y configuración de los botones numéricos.
+     */
     private JPanel crearPanelNumeros() {
         JPanel panelNumeros = new JPanel(new GridLayout(4, 3, 20, 20));
         panelNumeros.setBackground(Color.ORANGE);
@@ -76,6 +98,11 @@ public class CalculadoraInterfaz extends JFrame implements ActionListener, KeyLi
         return panelNumeros;
     }
 
+    /**
+     * Crea el panel que contiene los botones de operaciones de la calculadora.
+     * 
+     * @return JPanel con el diseño y configuración de los botones de operaciones.
+     */
     private JPanel crearPanelOperaciones() {
         JPanel panelOperaciones = new JPanel(new GridLayout(2, 3, 20, 20));
         panelOperaciones.setBackground(Color.ORANGE);
@@ -93,12 +120,11 @@ public class CalculadoraInterfaz extends JFrame implements ActionListener, KeyLi
         return panelOperaciones;
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        String input = e.getActionCommand();
-        procesarEntrada(input);
-    }
-
+    /**
+     * Procesa la entrada del usuario desde los botones o el teclado.
+     * 
+     * @param input Entrada recibida del usuario.
+     */
     private void procesarEntrada(String input) {
         try {
             switch (input) {
@@ -108,8 +134,7 @@ public class CalculadoraInterfaz extends JFrame implements ActionListener, KeyLi
                 case "/":
                     logica.setOperando1(Double.parseDouble(pantallaResultado.getText()));
                     logica.setOperacion(input);
-                    pantallaAlmacenada
-                            .setText("Valor Almacenado: " + pantallaResultado.getText() + " | Modo: " + modoEntrada);
+                    pantallaAlmacenada.setText("Valor Almacenado: " + pantallaResultado.getText() + " -- Modo: " + modoEntrada);
                     entrada.setLength(0);
                     break;
                 case "=":
@@ -126,7 +151,7 @@ public class CalculadoraInterfaz extends JFrame implements ActionListener, KeyLi
                 case "C":
                     pantallaResultado.setText("0");
                     pantallaResultado.setForeground(Color.WHITE);
-                    pantallaAlmacenada.setText("Valor Almacenado: 0 | Modo: " + modoEntrada);
+                    pantallaAlmacenada.setText("Valor Almacenado: 0 -- Modo: " + modoEntrada);
                     entrada.setLength(0);
                     break;
                 default:
@@ -139,8 +164,21 @@ public class CalculadoraInterfaz extends JFrame implements ActionListener, KeyLi
         }
     }
 
+    /**
+     * Cambia el color del texto en pantalla según si el resultado es positivo o negativo.
+     * 
+     * @param valor Resultado a mostrar en la pantalla.
+     */
     private void colorResultado(double valor) {
         pantallaResultado.setForeground(valor < 0 ? Color.RED : Color.WHITE);
+    }
+
+    // Métodos de manejo de eventos (ActionListener, KeyListener, WindowListener).
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        String input = e.getActionCommand();
+        procesarEntrada(input);
     }
 
     @Override
@@ -166,7 +204,7 @@ public class CalculadoraInterfaz extends JFrame implements ActionListener, KeyLi
                 break;
             case KeyEvent.VK_COMMA:
             case KeyEvent.VK_DECIMAL:
-                procesarEntrada(",");
+                procesarEntrada(".");
                 break;
             case KeyEvent.VK_ADD:
                 procesarEntrada("+");
@@ -185,6 +223,7 @@ public class CalculadoraInterfaz extends JFrame implements ActionListener, KeyLi
                 break;
             case KeyEvent.VK_BACK_SPACE:
                 procesarEntrada("C");
+                break;
             default:
                 break;
         }
@@ -198,7 +237,7 @@ public class CalculadoraInterfaz extends JFrame implements ActionListener, KeyLi
     public void windowIconified(WindowEvent e) {
         pantallaResultado.setText("0");
         entrada.setLength(0);
-        pantallaAlmacenada.setText("Valor Almacenado: 0 | Modo: " + modoEntrada);
+        pantallaAlmacenada.setText("Valor Almacenado: 0 -- Modo: " + modoEntrada);
     }
 
     @Override
@@ -225,6 +264,11 @@ public class CalculadoraInterfaz extends JFrame implements ActionListener, KeyLi
     public void windowDeactivated(WindowEvent e) {
     }
 
+    /**
+     * Método principal que inicia la calculadora.
+     * 
+     * @param args 
+     */
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             CalculadoraInterfaz calculadora = new CalculadoraInterfaz();
