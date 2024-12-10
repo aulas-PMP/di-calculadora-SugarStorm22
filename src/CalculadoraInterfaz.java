@@ -53,6 +53,7 @@ public class CalculadoraInterfaz extends JFrame implements ActionListener, KeyLi
         panelInferior.add(panelOperaciones, BorderLayout.EAST);
         add(panelInferior, BorderLayout.SOUTH);
 
+        addWindowListener(this);
         addKeyListener(this);
         setFocusable(true);
         setFocusTraversalKeysEnabled(false);
@@ -197,6 +198,7 @@ public class CalculadoraInterfaz extends JFrame implements ActionListener, KeyLi
     public void windowIconified(WindowEvent e) {
         pantallaResultado.setText("0");
         entrada.setLength(0);
+        pantallaAlmacenada.setText("Valor Almacenado: 0 | Modo: " + modoEntrada);
     }
 
     @Override
